@@ -160,6 +160,9 @@ using Conda, check out the facial rec repository a)bove or look into how we
 [build](scripts/build-conda-docker)
 our test [docker containers](dockerfiles/CondaDockerfile).
 
+There is as well a `clj-new` template  [clj-py-r-template](https://github.com/behrica/clj-py-r-template) which generates a skeleton for a new Clojure library 
+including a working Dockerfile + deps.edn. Other then Docker it supports as well Singularity and Gitpod.
+
 ## Community
 
 We like to talk about libpython-clj on [Zulip](https://clojurians.zulipchat.com/#streams/215609/libpython-clj-dev) as the conversations are persistent and searchable.
