@@ -4,7 +4,7 @@
   enabling the tech.v3.tensor/ensure-tensor call to work with numpy arrays -- using
   zero copying when possible.
 
-  All users need to do is call require this namespace; then as-jvm will convert a numpy
+  All users need to do is call require this namespace; then ->jvm will convert a numpy
   array into a tech tensor in-place."
   (:require [libpython-clj2.python.ffi :as py-ffi]
             [libpython-clj2.python.fn :as py-fn]
