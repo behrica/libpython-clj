@@ -169,7 +169,7 @@ The following does this without an interactive pytho shell, it just runs the pro
 `clojure.core/load-file`
 
 ```bash
-python3 -c 'import cljbridge;cljbridge.load_clojure_file(clj_file="my-file.clj")'
+python3 -c 'from clojurebridge import cljbridge;cljbridge.load_clojure_file(clj_file="my-file.clj")'
 ```
 
 
