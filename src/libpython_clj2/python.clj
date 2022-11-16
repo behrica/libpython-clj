@@ -35,7 +35,10 @@ user> (py/py. np linspace 2 3 :num 10)
             [tech.v3.datatype.ffi :as dtype-ffi]
             [tech.v3.datatype.errors :as errors]
             [clojure.tools.logging :as log]
-            clojure.edn)
+            clojure.java.shell
+            clojure.edn
+            clojure.set
+            [clojure.data.json :as json])
   (:import [java.util Map List]
            [clojure.lang IFn]))
 
@@ -97,7 +100,46 @@ user> (py/py. np linspace 2 3 :num 10)
     (let [python-edn-opts (-> (try (slurp "python.edn")
                                    (catch java.io.FileNotFoundException _ "{}"))
                               clojure.edn/read-string)
-          options (merge python-edn-opts options)
+
+          _ (let [auto-python-libs (into #{} (get-in python-edn-opts [:auto-venv :libraries]))
+                  mode (get-in python-edn-opts [:auto-venv :mode])
+                  venv-dir (get-in python-edn-opts [:auto-venv :dir])]
+
+          
+
+              (when (= :recreate mode)
+                (do
+                  (println "Delete venv: " venv-dir "  result: " (clojure.java.shell/sh "rm" "-rf" venv-dir))
+                  (println "Create new venv:" venv-dir "  result: " (clojure.java.shell/sh "python" "-m" "venv" venv-dir))
+                  (println "Install pckages: " auto-python-libs " in " venv-dir "  result: " (apply clojure.java.shell/sh (format "%s/bin/pip" venv-dir) "install" "--no-input" auto-python-libs))))
+              (when (= :install mode)
+                (println (apply clojure.java.shell/sh (format "%s/bin/pip" venv-dir) "install" "--no-input" auto-python-libs)))
+
+
+              (when (= :check mode)
+                (let [installed-packages
+                      (->
+                       (clojure.java.shell/sh (format "%s/bin/pip" venv-dir) "list" "--format=json")
+                       :out
+                       (json/read-str {:key-fn keyword}))
+                      package-names (into #{} (map :name installed-packages))]
+
+
+                  (assert (clojure.set/subset? #{"lime"  "sklearn"} package-names)
+                          (format  "Not all needed packages are installed in venv %s. Missing packages are %s "
+                                   venv-dir
+                                   (clojure.set/difference #{"lime"  "sklearn"} installed-packages))))))
+
+
+
+           
+          
+          ;; _ (println (clojure.java.shell/sh "/tmp/xxx/bin/pip" "list"))
+
+
+
+          options (merge python-edn-opts options
+                         {:python-executable (format  "%s/bin/python" (get-in python-edn-opts [:auto-venv :dir]))})
           info (py-info/detect-startup-info options)
           _ (log/infof "Startup info %s" info)
           _ (when-let [lib-path (:java-library-path-addendum
