@@ -116,12 +116,13 @@ user> (py/py. np linspace 2 3 :num 10)
                 (println (apply clojure.java.shell/sh (format "%s/bin/pip" venv-dir) "install" "--no-input" auto-python-libs)))
 
 
+
               (when (= :check mode)
                 (let [installed-packages
                       (->
                        (clojure.java.shell/sh (format "%s/bin/pip" venv-dir) "list" "--format=json")
                        :out
-                       (json/read-str {:key-fn keyword}))
+                       (json/read-str :key-fn keyword))
                       package-names (into #{} (map :name installed-packages))]
 
 
