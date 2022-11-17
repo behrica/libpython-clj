@@ -126,10 +126,10 @@ user> (py/py. np linspace 2 3 :num 10)
                       package-names (into #{} (map :name installed-packages))]
 
 
-                  (assert (clojure.set/subset? #{"lime"  "sklearn"} package-names)
+                  (assert (clojure.set/subset? auto-python-libs package-names)
                           (format  "Not all needed packages are installed in venv %s. Missing packages are %s "
                                    venv-dir
-                                   (clojure.set/difference #{"lime"  "sklearn"} installed-packages))))))
+                                   (clojure.set/difference #{"lime"  "sklearn"} auto-python-libs))))))
 
 
 
