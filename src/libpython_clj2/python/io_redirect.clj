@@ -33,7 +33,7 @@
                                                (py-base/->jvm
                                                 (first args))))
                     (.flush (self->writer self))
-                    )
+                    ))
                 (py-ffi/py-none))
               {:arg-converter identity})
      "flush" (py-class/make-tuple-instance-fn
