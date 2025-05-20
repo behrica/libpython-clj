@@ -38,7 +38,7 @@
               {:arg-converter identity} ;;avoid paying anything for argument conversion
               )
      "isatty" (py-class/make-tuple-instance-fn
-               (constantly (py-ffi/py-false)))})))
+               (constantly (py-ffi/py-true)))})))
 
 
 (defn setup-std-writer
