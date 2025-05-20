@@ -28,9 +28,12 @@
      "write" (py-class/make-tuple-instance-fn
               (fn [self & args]
                 (when (seq args)
-                  (.write (self->writer self) (str
+                  (do 
+                   (.write (self->writer self) (str
                                                (py-base/->jvm
-                                                (first args)))))
+                                                (first args))))
+                    (.flush (self->writer self))
+                    )
                 (py-ffi/py-none))
               {:arg-converter identity})
      "flush" (py-class/make-tuple-instance-fn
